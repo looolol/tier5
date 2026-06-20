@@ -1,0 +1,57 @@
+# ==========================================
+# System & IDE Files
+# ==========================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ==========================================
+# Node.js & Dependency Managers
+# ==========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ==========================================
+# Build Outputs & Caches
+# ==========================================
+dist/
+.angular/
+.nx/
+.turbo/
+out/
+.next/
+
+# ==========================================
+# Environment Variables & Secrets (CRITICAL)
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+
+# ==========================================
+# Local Databases
+# ==========================================
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+/packages/backend/prisma/dev.db
+
+# ==========================================
+# Testing & Coverage
+# ==========================================
+coverage/
+.nyc_output/
+*.lcov

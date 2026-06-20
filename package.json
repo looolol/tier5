@@ -1,0 +1,18 @@
+{
+    "name": "tier-5",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Destiny 2 Vault and Wishlist Manager",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "build:client": "npm run build -w @tier-5/bungie-api",
+        "dev:backend": "npm run dev -w @tier-5/backend",
+        "start:frontend": "npm run start -w @tier-5/frontend",
+        "dev": "npm run dev:backend & npm run start:frontend"
+    },
+    "devDependencies": {
+        "typescript": "^5.7.3"
+    }
+}
