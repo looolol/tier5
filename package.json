@@ -10,9 +10,10 @@
         "build:client": "npm run build -w @tier-5/bungie-api",
         "dev:backend": "npm run dev -w @tier-5/backend",
         "start:frontend": "npm run start -w @tier-5/frontend",
-        "dev": "npm run dev:backend & npm run start:frontend"
+        "dev": "concurrently \"npm:dev:backend\" \"npm:start:frontend\""
     },
     "devDependencies": {
+        "concurrently": "^10.0.3",
         "typescript": "^5.7.3"
     }
 }
