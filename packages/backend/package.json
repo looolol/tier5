@@ -9,6 +9,7 @@
     },
     "dependencies": {
         "@tier-5/bungie-api": "1.0.0",
+        "axios": "^1.18.0",
         "cors": "^2.8.6",
         "express": "^5.2.1",
         "tsx": "^4.22.4"
