@@ -23,17 +23,16 @@ export async function exchangeBungieCodeForToken(
     config: BungieOAuthConfig
 ): Promise<BungieTokenResponse> {
     try {
-        const response = await axios.post(
-            'https://www.bungie.net/platform/app/oauth/token/',
-            new URLSearchParams({
-                grant_type: 'authorization_code',
-                code: code,
-                client_id: config.clientId,
-                client_secret: config.clientSecret,
-            }),
+        const params = new URLSearchParams();
+        params.append('grant_type', 'authorization_code');
+        params.append('code', code);
+        params.append('client_id', config.clientId);
+        params.append('client_secret', config.clientSecret);
+
+        const response = await axios.post('https://www.bungie.net/Platform/App/OAuth/Token/', params.toString(), 
             {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlenoded',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                     'X-API-Key': config.apiKey,
                 },
             }

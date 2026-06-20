@@ -23,11 +23,7 @@ export const handleBungieCallback = async (req: Request, res: Response): Promise
             apiKey: process.env.BUNGIE_API_KEY || '',
         });
 
-        res.json({
-            success: true,
-            message: 'Authenticated successfully',
-            ...tokens
-        })
+        res.redirect(`https://tier5.local/auth/callback?token=${tokens.access_token}`);
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }

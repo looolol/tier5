@@ -1,0 +1,7 @@
+tier5.local {
+    # Route API traffic over to the Epress Backend container
+    reverse_proxy /api/* backend:7777
+
+    # Route all other web traffic to the Angular Frontend container
+    reverse_proxy * frontend:4200
+}
