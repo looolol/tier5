@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { getBungieStatus } from '@tier-5/bungie-api';
 import { authRouter } from './routes/auth.router.js';
+import { userRouter } from './routes/user.router.js';
 
 const app = express();
 const PORT = process.env.PORT || 7777;
@@ -24,7 +25,7 @@ app.get('/api/status', async (req, res) => {
 });
 
 app.use('/api/auth', authRouter);
-
+app.use('/api/user', userRouter);
 
 app.listen(PORT, () => {
     console.log(`🚀 Tier 5 Backend running at http://localhost:${PORT}`);

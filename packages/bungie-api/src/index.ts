@@ -15,34 +15,7 @@ export interface BungieTokenResponse {
 }
 
 export function getBungieAuthUrl(clientId: string): string {
-    return `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code`;
-}
-
-export async function exchangeBungieCodeForToken(
-    code: string,
-    config: BungieOAuthConfig
-): Promise<BungieTokenResponse> {
-    try {
-        const params = new URLSearchParams();
-        params.append('grant_type', 'authorization_code');
-        params.append('code', code);
-        params.append('client_id', config.clientId);
-        params.append('client_secret', config.clientSecret);
-
-        const response = await axios.post('https://www.bungie.net/Platform/App/OAuth/Token/', params.toString(), 
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-API-Key': config.apiKey,
-                },
-            }
-        );
-
-        return response.data;
-    } catch (error: any) {
-        console.error('Bungie API Library Error during token exchange:', error.response?.data || error.message);
-        throw new Error('Failed to exchange authoriation code via Bungie API package');
-    }
+    return `https://www.bungie.net/en/OAuth/Authorize?client_id=${clientId}&response_type=code&reauth=true`;
 }
 
 export async function getBungieStatus(apiKey: string) {
@@ -78,5 +51,56 @@ export async function getBungieStatus(apiKey: string) {
             error: error.response?.data?.Message || 'Bungie API is unreachable.',
             timestamp: new Date().toISOString(),
         };
+    }
+}
+
+
+export async function exchangeBungieCodeForToken(
+    code: string,
+    config: BungieOAuthConfig
+): Promise<BungieTokenResponse> {
+    try {
+        const params = new URLSearchParams();
+        params.append('grant_type', 'authorization_code');
+        params.append('code', code);
+        params.append('client_id', config.clientId);
+        params.append('client_secret', config.clientSecret);
+
+        const response = await axios.post('https://www.bungie.net/Platform/App/OAuth/Token/', params.toString(), 
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-API-Key': config.apiKey,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error: any) {
+        console.error('Bungie API Library Error during token exchange:', error.response?.data || error.message);
+        throw new Error('Failed to exchange authoriation code via Bungie API package');
+    }
+}
+
+
+export async function getBungieCurrentMembership(authHeader: string, apiKey: string) {
+    try {
+        const response = await axios.get('https://www.bungie.net/Platform/User/GetMembershipsForCurrentUser', {
+            headers: {
+                'Authorization': authHeader,
+                'X-API-Key': apiKey,
+            }
+        });
+
+        const profile = response.data?.Response?.bungieNetUser;
+
+        return {
+            username: profile?.uniqueName || 'Unknown Guardian',
+            displayName: profile?.displayName || 'Guardian',
+            profilePicture: `https://www.bungie.net${profile?.profilePicturePath || '/img/profile/avatars/default.jpg'}`
+        };
+    } catch (error: any) {
+        console.error('Bungie API Profile fetch failed:', error.response?.data || error.message);
+        throw new Error('Failed to retrieve logged-in user profile data.');
     }
 }
