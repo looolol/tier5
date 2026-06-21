@@ -29,6 +29,7 @@ dist/
 .turbo/
 out/
 .next/
+packages/backend/data/*
 
 # ==========================================
 # Docker

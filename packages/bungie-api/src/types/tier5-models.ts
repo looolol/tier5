@@ -31,3 +31,14 @@ export interface BungieUserProfile {
     displayName: string;
     profilePicture: string;
 }
+
+export interface DestinyManifestMetadata {
+    version: string;
+    jsonWorldComponentContentPaths: {
+        en: {
+            DestinyInventoryItemDefinition: string;
+            DestinyStatGroupDefinition: string;
+            // can add more definitions later (Parks, Talents, etc.)
+        }
+    }
+}
