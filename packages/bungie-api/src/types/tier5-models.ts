@@ -30,6 +30,8 @@ export interface BungieUserProfile {
     username: string;
     displayName: string;
     profilePicture: string;
+    membershipType: number;
+    membershipId: string;
 }
 
 export interface DestinyManifestMetadata {
