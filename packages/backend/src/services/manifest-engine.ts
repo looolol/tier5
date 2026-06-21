@@ -1,19 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { getManifestMetadata, fetchManifestComponent, MANIFEST_COMPONENTS, ComponentName } from '@tier5/bungie-api';
+import { getManifestMetadata, fetchManifestComponent, MANIFEST_COMPONENTS, ComponentName, setManifestCache } from '@tier5/bungie-api';
 
 export class ManifestEngine {
     private static readonly MANIFEST_DIR = path.join(process.cwd(), 'data');
-    private static readonly CACHE_FILE = path.join(this.MANIFEST_DIR, 'items_cache.json');
     private static readonly VERSION_FILE = path.join(this.MANIFEST_DIR, 'manifest_version.txt');
-
-    private static db: Record<ComponentName, Record<string, any>> = {
-        DestinyInventoryItemDefinition: {},
-        DestinyStatDefinition: {},
-        DestinySandboxPerkDefinition: {},
-        DestinyPlugSetDefinition: {}
-    };
-
 
     public static async initialize(): Promise<void> {
         const apiKey = process.env['BUNGIE_API_KEY'];
@@ -42,8 +33,8 @@ export class ManifestEngine {
             );
 
             if (localVersion === remoteVersion && allFilesExist) {
-                console.log(`[MANIFEST ENGINE] 🧠 All components fresh (Version: ${remoteVersion}).  Loading to memory...`);
                 this.loadAllCachesIntoMemory();
+                console.log(`[MANIFEST ENGINE] 🧠 All components fresh (Version: ${remoteVersion}).  Loading to memory...`);
             } else {
                 console.log(`[MANIFEST ENGINE] 🔄 Manifest outdated or missing.  Initiating parallel downstream download...`);
 
@@ -56,24 +47,14 @@ export class ManifestEngine {
                 await Promise.all(downloadTasks);
                 fs.writeFileSync(this.VERSION_FILE, remoteVersion, 'utf-8');
                 console.log(`[MANIFEST ENGINE] ✅ All components synchronized to version: ${remoteVersion}`);
-
-                this.debugEngineStartup();
             }
         } catch (error: any) {
             console.error('[MANIFEST ENGINE] ❌ Critical pipeline initialization failure:', error.message);
             if (allFilesExist) {
-                console.warn('[MANIFEST ENGINE] ⚠️ Initializatio failed.  Rolling back to offline storage caches.');
+                console.warn('[MANIFEST ENGINE] ⚠️ Initialization failed.  Rolling back to offline storage caches.');
                 this.loadAllCachesIntoMemory();
             }
         }
-    }
-
-    public static getDefinitionByName(component: ComponentName, hash: number | string): any | null {
-        return this.db[component]?.[hash.toString()] || null;
-    }
-
-    public static getItemsByHash(hash: number | string): any | null {
-        return this.getDefinitionByName('DestinyInventoryItemDefinition', hash);
     }
 
     private static async downloadAndCacheComponent(component: ComponentName, relativeUrl: string): Promise<void> {
@@ -84,7 +65,7 @@ export class ManifestEngine {
         const targetFilePath = path.join(this.MANIFEST_DIR, `${component}.json`);
         fs.writeFileSync(targetFilePath, JSON.stringify(data), 'utf-8');
 
-        this.db[component] = data;
+        setManifestCache(component, data);
         console.log(`[MANIFEST ENGINE] 💾 Cached ${Object.keys(data).length} elements for ${component}`);
     }
 
@@ -92,22 +73,9 @@ export class ManifestEngine {
         MANIFEST_COMPONENTS.forEach(component => {
             const targetFilePath = path.join(this.MANIFEST_DIR, `${component}.json`);
             const rawData = fs.readFileSync(targetFilePath, 'utf-8');
-            this.db[component] = JSON.parse(rawData);
-            console.log(`[MANIFEST ENGINE] 🧠 Loaded ${Object.keys(this.db[component]).length} keys into memory for: ${component}`);
+
+            setManifestCache(component, JSON.parse(rawData));
+            console.log(`[MANIFEST ENGINE] 🧠 Loaded keys into memory for: ${component}`);
         });
     }
-
-    private static debugEngineStartup(): void {
-        console.log('--- [MANIFEST ENGINE LIVE VERIFICATION] ---');
-        const itemsCount = Object.keys(this.db.DestinyInventoryItemDefinition).length;
-        const statsCount = Object.keys(this.db.DestinyStatDefinition).length;
-        const perksCount = Object.keys(this.db.DestinySandboxPerkDefinition).length;
-        const plugSetCount = Object.keys(this.db.DestinyPlugSetDefinition).length;
-        
-        console.log(`Available Items: ${itemsCount}`);
-        console.log(`Available Stats: ${statsCount}`);
-        console.log(`Available Perks: ${perksCount}`);
-        console.log(`Available Plug Sets: ${plugSetCount}`);
-        console.log('-------------------------------------------');
-      }
 }

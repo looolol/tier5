@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ManifestEngine } from '../services/manifest-engine.js';
+import { getItemByHash } from '@tier5/bungie-api';
 
 export const manifest = async (req: Request, res: Response): Promise<void> => {
     return;
@@ -14,7 +14,7 @@ export const hash = async (req: Request, res: Response) => {
         return res.status(400).json({ error: 'Item hash is required.' });
     }
 
-    const itemData = ManifestEngine.getItemsByHash(hash);
+    const itemData = getItemByHash(hash);
 
     if (!itemData) {
         return res.status(404).json({ error: 'Item hash not found in local Manifest database.' });

@@ -1,5 +1,14 @@
-import { DestinyManifestMetadata } from "../types/tier5-models.js";
+import { ComponentName, DestinyManifestMetadata } from "../types/tier5-models.js";
 import { bungieClient } from "../live/client.js";
+
+
+let manifestDb: Record<ComponentName, Record<string, any>> = {
+    DestinyInventoryItemDefinition: {},
+    DestinyStatDefinition: {},
+    DestinySandboxPerkDefinition: {},
+    DestinyPlugSetDefinition: {}
+};
+
 
 export async function getManifestMetadata(apiKey: string): Promise<DestinyManifestMetadata> {
     try {
@@ -26,4 +35,28 @@ export async function fetchManifestComponent<T = any>(relativeUrl:string): Promi
         console.error(`[BUNGIE API] Failed downloading manifest component from ${fullUrl}:`, error.message);
         throw new Error('Failed to download requested Destiny 2 manifest component definition.');
     }
+}
+
+export function setManifestCache(component: ComponentName, data: Record<string, any>): void {
+    manifestDb[component] = data;
+}
+
+export function getDefinitionByName(component: ComponentName, hash: number | string): any | null {
+    return manifestDb[component]?.[hash.toString()] || null;
+}
+
+export function getItemByHash(hash: number | string): any | null {
+    return getDefinitionByName('DestinyInventoryItemDefinition', hash);
+}
+
+export function getStatByHash(hash: number | string): any | null {
+    return getDefinitionByName('DestinyStatDefinition', hash);
+}
+
+export function getPerkByHash(hash: number | string): any | null {
+    return getDefinitionByName('DestinySandboxPerkDefinition', hash);
+}
+
+export function getPlugSetByHash(hash: number | string): any | null {
+    return getDefinitionByName('DestinyPlugSetDefinition', hash);
 }
