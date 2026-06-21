@@ -14,7 +14,7 @@ export const hash = async (req: Request, res: Response) => {
         return res.status(400).json({ error: 'Item hash is required.' });
     }
 
-    const itemData = ManifestEngine.getItemByHash(hash);
+    const itemData = ManifestEngine.getItemsByHash(hash);
 
     if (!itemData) {
         return res.status(404).json({ error: 'Item hash not found in local Manifest database.' });

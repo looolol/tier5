@@ -37,8 +37,18 @@ export interface DestinyManifestMetadata {
     jsonWorldComponentContentPaths: {
         en: {
             DestinyInventoryItemDefinition: string;
-            DestinyStatGroupDefinition: string;
-            // can add more definitions later (Parks, Talents, etc.)
+            DestinyStatDefinition: string;
+            DestinySandboxPerkDefinition: string;
+            DestinyPlugSetDefinition: string;
         }
     }
 }
+
+export const MANIFEST_COMPONENTS = [
+    'DestinyInventoryItemDefinition',
+    'DestinyStatDefinition',
+    'DestinySandboxPerkDefinition',
+    'DestinyPlugSetDefinition'
+] as const;
+
+export type ComponentName = typeof MANIFEST_COMPONENTS[number];
