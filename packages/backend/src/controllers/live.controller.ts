@@ -50,7 +50,8 @@ const BUCKET_MAP: Record<number, string> = {
 
             const slotKey = BUCKET_MAP[bucketHash];
             if (!slotKey) {
-                console.log(`⚠️ [Dropped Item] ${manifestDetails.displayProperties?.name} | Type: ${manifestDetails.itemTypeDisplayName} | Missing Hash: ${bucketHash}`);
+                // might want to sort these by Type to get a list of unsupported hashes
+                //console.log(`⚠️ [Dropped Item] ${manifestDetails.displayProperties?.name} | Type: ${manifestDetails.itemTypeDisplayName} | Missing Hash: ${bucketHash}`);
                 return null; // Skip non-tracked items like materials or bounties for now
             }
 
@@ -87,7 +88,7 @@ const BUCKET_MAP: Record<number, string> = {
                 }
             });
 
-            const inventoryItems = characterInventories[charId]?.item || [];
+            const inventoryItems = characterInventories[charId]?.items || [];
             inventoryItems.forEach((item: any) => {
                 const hydrated = hydrateItem(item);
                 if (hydrated) {
