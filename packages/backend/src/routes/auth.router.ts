@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { loginWithBungie, handleBungieCallback } from '../controllers/auth.controller.js'
+import { loginWithBungie, handleBungieCallback } from '../controllers/auth.controller.js';
 
 
 const router = Router();

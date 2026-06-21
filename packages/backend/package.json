@@ -1,5 +1,5 @@
 {
-    "name": "@tier-5/backend",
+    "name": "@tier5/backend",
     "version": "1.0.0",
     "private": true,
     "type": "module",
@@ -8,7 +8,7 @@
         "build": "tsc"
     },
     "dependencies": {
-        "@tier-5/bungie-api": "1.0.0",
+        "@tier5/bungie-api": "*",
         "axios": "^1.18.0",
         "cors": "^2.8.6",
         "express": "^5.2.1",

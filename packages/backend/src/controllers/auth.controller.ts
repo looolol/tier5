@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getBungieAuthUrl, exchangeBungieCodeForToken } from '@tier-5/bungie-api';
+import { getBungieAuthUrl, exchangeBungieCodeForToken } from '@tier5/bungie-api';
 
 
 export const loginWithBungie = (req: Request, res: Response): void => {
@@ -28,3 +28,7 @@ export const handleBungieCallback = async (req: Request, res: Response): Promise
         res.status(500).json({ error: error.message });
     }
 };
+
+/* TODO: Add Token Refresh Logic */
+
+/* TODO: Move token to secure storage, not in local storage */

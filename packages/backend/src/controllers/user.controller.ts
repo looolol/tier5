@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { getBungieCurrentMembership } from '@tier-5/bungie-api';
+import { getBungieCurrentMembership } from '@tier5/bungie-api';
 
-export const getUserProfile = async (req: Request, res: Response) => {
+export const getUserProfile = async (req: Request, res: Response): Promise<Response> => {
     try {
         const authHeader = req.headers.authorization;
 
