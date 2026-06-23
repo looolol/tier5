@@ -1,0 +1,17 @@
+<div style="max-width: 500px; margin: 4rem auto; padding: 2rem; background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); text-align: center;">
+    @if (status() === 'processing') {
+      <h2 style="color: #0f172a;">Synchronizing secure tokens...</h2>
+      <p style="color: #71717a;">Decrypting authorization payload from the Tower network.</p>
+    }
+
+    @if (status() === 'success') {
+      <h2 style="color: #16a34a;">🔒 Secure Connection Established!</h2>
+      <p style="color: #71717a; margin-bottom: 1.5rem;">Your Bungie account is linked successfully. Redirecting you home...</p>
+    }
+
+    @if (status() === 'error') {
+      <h2 style="color: crimson;">⚠️ Authentication Handshake Failed</h2>
+      <p style="color: #71717a; margin-bottom: 1rem;">{{ errorMessage() }}</p>
+      <a href="/" style="color: #2563eb; font-weight: 500;">Return to Dashboard</a>
+    }
+  </div>
