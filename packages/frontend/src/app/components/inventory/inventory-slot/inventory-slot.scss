@@ -1,0 +1,33 @@
+.slot-row-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--gap);
+  background: #0f0f11;
+  padding: var(--gap);
+  border-radius: 6px;
+  border: 1px solid #1c1c1f;
+  height: 100%;
+  align-items: center;
+}
+
+.equipped-box { display: flex; flex-shrink: 0; padding-right: var(--gap); border-right: 1px solid #1f1f23; }
+.empty-placeholder-slot { width: var(--equipped-size); height: var(--equipped-size); border: 1px dashed #2d2d30; border-radius: 6px; background: #131315; }
+
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, var(--item-size));
+  grid-template-rows: repeat(3, var(--item-size));
+  gap: var(--gap);
+  width: var(--inventory-3x3-width);
+  min-width: var(--inventory-3x3-width);
+  flex-shrink: 0;
+}
+
+.is-vault .inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  grid-template-rows: unset;
+  width: 100%;
+  max-width: unset;
+}

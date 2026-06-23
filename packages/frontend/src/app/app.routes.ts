@@ -1,9 +1,9 @@
 import { Router, Routes } from '@angular/router';
-import { AuthCallback } from './components/auth/auth-callback/auth-callback';
+import { AuthCallback } from './components/auth-callback/auth-callback';
 import { MainPage } from './components/main-page/main-page';
-import { InventoryPage } from './components/inventory/inventory-page';
 import { inject } from '@angular/core';
 import { Auth } from './services/auth/auth';
+import { InventoryDashboard } from './components/inventory/inventory-dashboard/inventory-dashboard';
 
 
 const redirectIfAuthed = () => {
@@ -43,7 +43,7 @@ export const routes: Routes = [
         canActivate: [tokenGuard],
         children: [
             { path: '', redirectTo: 'inventory', pathMatch: 'full' },
-            { path: 'inventory', component: InventoryPage },
+            { path: 'inventory', component: InventoryDashboard },
         ]
     },
     {

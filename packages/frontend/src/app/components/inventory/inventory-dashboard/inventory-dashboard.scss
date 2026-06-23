@@ -1,0 +1,85 @@
+.dashboard-scroller {
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  overflow-x: auto; 
+}
+
+.matrix-grid {
+  --item-size: 52px; 
+  --gap: 6px;
+  --equipped-size: calc(var(--item-size) * 1.15); 
+  --inventory-3x3-width: calc((var(--item-size) * 3) + (var(--gap) * 2));
+  --char-column-width: calc(var(--equipped-size) + var(--inventory-3x3-width) + (var(--gap) * 3) + 16px);
+
+  display: grid;
+  gap: var(--gap);
+  width: 100%;
+  grid-template-columns: repeat(var(--char-count), var(--char-column-width)) minmax(400px, 1fr);
+  grid-auto-rows: minmax(calc((var(--item-size) * 3) + 20px), auto);
+}
+
+.column-header-card {
+  background: #141416;
+  border: 1px solid #222225;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .header-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .emblem-thumb { width: 36px; height: 36px; border-radius: 4px; }
+
+  .meta-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    .class-title { font-size: 0.95rem; font-weight: 600; color: #fff; }
+    .light-title { font-size: 0.8rem; color: #eab308; font-weight: 500; }
+  }
+
+  .collapse-toggle-btn {
+    background: transparent;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 0.9rem;
+    &:hover { color: #fff; }
+  }
+}
+
+// Global responsive collapse transformations
+.column-header-card, .grid-cell-wrapper {
+  transition: min-width 0.15s ease, max-width 0.15s ease, opacity 0.15s ease;
+
+  &.collapsed {
+    min-width: 44px !important;
+    max-width: 44px !important;
+    opacity: 0.3;
+    .meta-info, .emblem-thumb, .collapse-toggle-btn { display: none !important; }
+    .header-banner { padding: 0; justify-content: center; }
+    &::after { content: '＋'; font-size: 0.8rem; color: #666; }
+  }
+}
+
+.collapsed-strip-placeholder {
+  height: 100%;
+  background: #0d0d0f;
+  border: 1px dashed #1f1f22;
+  border-radius: 6px;
+}
+
+.loading-gate {
+  text-align: center;
+  color: #71717a;
+  padding: 6rem 0;
+  font-style: italic;
+}

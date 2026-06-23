@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GearBucketRow } from './gear-bucket-row';
+import { InventorySlot } from './inventory-slot';
 
-describe('GearBucketRow', () => {
-  let component: GearBucketRow;
-  let fixture: ComponentFixture<GearBucketRow>;
+describe('InventorySlot', () => {
+  let component: InventorySlot;
+  let fixture: ComponentFixture<InventorySlot>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GearBucketRow],
+      imports: [InventorySlot],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(GearBucketRow);
+    fixture = TestBed.createComponent(InventorySlot);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

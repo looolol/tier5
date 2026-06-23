@@ -1,0 +1,7 @@
+<div class="item-node" 
+        [class.equipped-scale]="isEquippedFrame"
+        [attr.data-tier]="item.tier | lowercase" 
+        [title]="item.name">
+    <img [src]="item.icon" [alt]="item.name" class="item-icon" />
+    <div class="tier-indicator"></div>
+</div>

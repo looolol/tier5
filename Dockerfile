@@ -1,4 +1,4 @@
-FROM node:24.12.0-alpine AS base
+FROM node:24.15.0-slim AS base
 WORKDIR /app
 RUN npm install -g @angular/cli@21.2.16
 

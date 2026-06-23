@@ -1,1 +1,33 @@
-<p>inventory-dashboard works!</p>
+@if (store.isLoading()) {
+  <div class="loading-gate">
+    <h3>🛡️ Recomposing Matrix Grid Configurations...</h3>
+  </div>
+}
+
+@if (store.data()) {
+  <div class="dashboard-scroller">
+    <div class="matrix-grid" cdkDropListGroup [style.--char-count]="store.characters().length">
+      
+      @for (char of store.characters(); track char.characterId) {
+        <div class="column-header-card" [class.collapsed]="isCollapsed(char.characterId)">
+          <div class="header-banner" (click)="toggleCollapse(char.characterId)">
+            <img [src]="char.emblem" class="emblem-thumb" />
+            <div class="meta-info"><span>{{ char.class }}</span><span>✦ {{ char.light }}</span></div>
+          </div>
+        </div>
+      }
+      <div class="column-header-card vault-header">🏦 Vault</div>
+  
+      @for (slotKey of slotsOrder; track slotKey) {
+        @for (char of store.characters(); track char.characterId) {
+          <div class="grid-cell-wrapper" [class.collapsed]="isCollapsed(char.characterId)">
+            <app-inventory-slot [items]="char.slots[slotKey] ?? []" />
+          </div>
+        }
+        <div class="grid-cell-wrapper vault-cell">
+          <app-inventory-slot [items]="getVaultSlotItems(slotKey, store.vault())" [isVault]="true" />
+        </div>
+      }
+    </div>
+  </div>
+}

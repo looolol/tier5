@@ -1,0 +1,25 @@
+.item-node {
+    position: relative;
+    width: var(--item-size);
+    height: var(--item-size);
+    background: #1a1a1c;
+    border: 1px solid #2d2d30;
+    border-radius: 6px;
+    cursor: grab;
+    transition: transform 0.1s ease, border-color 0.1s ease;
+    user-select: none;
+    
+    &:active { cursor: grabbing; }
+  
+    &.equipped-scale {
+      width: var(--equipped-size);
+      height: var(--equipped-size);
+    }
+    
+    &[data-tier="exotic"] { border-color: #ceae33; .tier-indicator { background: #ceae33; } }
+    &[data-tier="legendary"] { border-color: #522b63; .tier-indicator { background: #522b63; } }
+    &[data-tier="rare"] { border-color: #2b4b63; .tier-indicator { background: #2b4b63; } }
+  }
+  
+  .item-icon { width: 100%; height: 100%; border-radius: 5px; display: block; }
+  .tier-indicator { position: absolute; bottom: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: #71717a; }
