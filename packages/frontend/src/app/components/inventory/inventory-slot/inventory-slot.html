@@ -1,6 +1,11 @@
 <div class="slot-row-wrapper" [class.is-vault]="isVault">
     @if (!isVault) {
-        <div class="equipped-box" cdkDropList [cdkDropListData]="[equippedItem()]">
+        <div class="equipped-box" 
+            cdkDropList 
+            [cdkDropListData]="[equippedItem()]"
+            [cdkDropListSortingDisabled]="true"
+            (cdkDropListDropped)="onDrop($event)">
+            
             @if (equippedItem()) {
                 <app-inventory-item [item]="equippedItem()!" [isEquippedFrame]="true" />
             } @else {
@@ -9,7 +14,12 @@
         </div>
     }
 
-    <div class="inventory-grid">
+    <div class="inventory-grid"
+        cdkDropList
+        [cdkDropListData]="inventoryPool()"
+        [cdkDropListSortingDisabled]="true"
+        [cdkDropListEnterPredicate]="enterPredicate"
+        (cdkDropListDropped)="onDrop($event)">
         @for (item of inventoryPool(); track item.instanceId || item.hash) {
             <app-inventory-item [item]="item" />
         }

@@ -3,6 +3,8 @@
   box-sizing: border-box;
   background: transparent;
   overflow-x: auto; 
+  overflow-y: auto;
+  touch-action: pan-y;
 }
 
 .matrix-grid {
@@ -82,4 +84,9 @@
   color: #71717a;
   padding: 6rem 0;
   font-style: italic;
+}
+
+.grid-cell-wrapper,
+.column-header-card {
+  touch-action: pan-y !important;
 }

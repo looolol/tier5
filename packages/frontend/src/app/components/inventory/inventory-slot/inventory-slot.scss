@@ -11,8 +11,26 @@
   align-items: center;
 }
 
-.equipped-box { display: flex; flex-shrink: 0; padding-right: var(--gap); border-right: 1px solid #1f1f23; }
-.empty-placeholder-slot { width: var(--equipped-size); height: var(--equipped-size); border: 1px dashed #2d2d30; border-radius: 6px; background: #131315; }
+.equipped-box { 
+  display: flex; 
+  flex-shrink: 0; 
+  padding-right: var(--gap); 
+  border-right: 1px solid #1f1f23; 
+
+  box-shadow: none;
+  background: transparent;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.empty-placeholder-slot { 
+  width: var(--equipped-size); 
+  height: var(--equipped-size); 
+  border: 1px dashed #2d2d30; 
+  border-radius: 6px; 
+  background: #131315; 
+}
 
 .inventory-grid {
   display: grid;
@@ -22,6 +40,26 @@
   width: var(--inventory-3x3-width);
   min-width: var(--inventory-3x3-width);
   flex-shrink: 0;
+
+  box-shadow: none;
+  background: transparent;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.equipped-box.cdk-drop-list-receiving,
+.inventory-grid.cdk-drop-list-receiving {
+  box-shadow: 0 0 10px rgba(161, 161, 170, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #52525b;
+}
+
+.equipped-box.cdk-drop-list-dragging,
+.inventory-grid.cdk-drop-list-dragging {
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.5);
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid #eab308;
 }
 
 .is-vault .inventory-grid {

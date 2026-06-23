@@ -1,7 +1,11 @@
 <div class="item-node" 
+        cdkDrag 
+        [cdkDragData]="item"
+        cdkDragBoundary=".matrix-grid"
         [class.equipped-scale]="isEquippedFrame"
-        [attr.data-tier]="item.tier | lowercase" 
         [title]="item.name">
+        
+    <div class="drag-handle" cdkDragHandle></div>
     <img [src]="item.icon" [alt]="item.name" class="item-icon" />
-    <div class="tier-indicator"></div>
+    <div class="tier-indicator" [attr.data-tier]="item.tier | lowercase" ></div>
 </div>

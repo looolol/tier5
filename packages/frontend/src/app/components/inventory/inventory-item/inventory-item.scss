@@ -6,7 +6,6 @@
     border: 1px solid #2d2d30;
     border-radius: 6px;
     cursor: grab;
-    transition: transform 0.1s ease, border-color 0.1s ease;
     user-select: none;
     
     &:active { cursor: grabbing; }
@@ -20,6 +19,35 @@
     &[data-tier="legendary"] { border-color: #522b63; .tier-indicator { background: #522b63; } }
     &[data-tier="rare"] { border-color: #2b4b63; .tier-indicator { background: #2b4b63; } }
   }
+
+  .drag-handle {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+  }
+
+  .drag-preview {
+    opacity: 0.8;
+    transform: scale(0.9);
+    pointer-events: none;
+  }
   
+  /* Hide the placeholder entirely if you don't want it to take up space */
+  .cdk-drag-placeholder {
+    display: none !important;
+  }
+
+  .cdk-drag-preview,
+  .cdk-drag-placeholder {
+    pointer-events: none !important;
+  }
+
+  .cdk-drag-animation {
+    pointer-events: none !important;
+  }
+
   .item-icon { width: 100%; height: 100%; border-radius: 5px; display: block; }
   .tier-indicator { position: absolute; bottom: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: #71717a; }
