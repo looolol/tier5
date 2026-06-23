@@ -11,7 +11,7 @@ import { ManifestEngine } from './services/manifest-engine.js';
 const app = express();
 const PORT = process.env.PORT || 7777;
 
-app.use(cors({ origin: `http://localhost:4200` }));
+app.use(cors({ origin: 'localhost:4200 '}));
 app.use(express.json());
 
 app.use('/api/status', statusRouter);

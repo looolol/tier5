@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { getUserInventorySummary } from '../controllers/live.controller.js';
+import { getUserInventory } from '../controllers/live.controller.js';
 
 
 const router = Router();
 
-router.get('/inventory', getUserInventorySummary);
+router.get('/inventory', getUserInventory);
 
 export const liveRouter = router;

@@ -1,4 +1,4 @@
-import { ComponentName, DestinyManifestMetadata } from "../types/tier5-models.js";
+import { BUCKET_MAP, ComponentName, DestinyManifestMetadata, HydratedItem } from "../types/tier5-models.js";
 import { bungieClient } from "../live/client.js";
 
 
@@ -59,4 +59,29 @@ export function getPerkByHash(hash: number | string): any | null {
 
 export function getPlugSetByHash(hash: number | string): any | null {
     return getDefinitionByName('DestinyPlugSetDefinition', hash);
+}
+
+export function hydrateItem(item: any): HydratedItem | null {
+    const manifestDetails = getItemByHash(item.itemHash);
+    if (!manifestDetails) return null;
+
+    const bucketHash = manifestDetails.inventory?.bucketTypeHash || 
+        manifestDetails.equipipingBlock?.equipmentSlotTypeHash;
+
+    const slotKey = BUCKET_MAP[bucketHash];
+    if (!slotKey) {
+        // might want to sort these by Type to get a list of unsupported hashes
+        //console.log(`⚠️ [Dropped Item] ${manifestDetails.displayProperties?.name} | Type: ${manifestDetails.itemTypeDisplayName} | Missing Hash: ${bucketHash}`);
+        return null; // Skip non-tracked items like materials or bounties for now
+    }
+
+    return {
+        instanceId: item.itemInstanceId,
+        hash: item.itemHash,
+        name: manifestDetails.displayProperties?.name,
+        icon: `https://www.bungie.net${manifestDetails.displayProperties?.icon}`,
+        tier: manifestDetails.inventory?.tierTypeName,
+        itemType: manifestDetails.itemTypeDisplayName,
+        slot: slotKey
+    }
 }

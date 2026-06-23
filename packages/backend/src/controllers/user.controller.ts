@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getBungieCurrentMembership } from '@tier5/bungie-api';
 
 export const getUserProfile = async (req: Request, res: Response): Promise<Response> => {
+    console.log('[USER CONTROLLER] Trying to get user profile...');
     try {
         const authHeader = req.headers.authorization;
 
@@ -10,8 +11,10 @@ export const getUserProfile = async (req: Request, res: Response): Promise<Respo
         }
 
         const profileData = await getBungieCurrentMembership(authHeader, process.env.BUNGIE_API_KEY || '');
+        console.log('[USER CONTROLLER] Success!');
         return res.json(profileData);
     } catch (error: any) {
+        console.log(`[USER CONTROLLER] Error: ${error.message}`);
         return res.status(500).json({ error: error.message });
     }
 };

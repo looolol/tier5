@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import { getItemByHash } from '@tier5/bungie-api';
 
-export const manifest = async (req: Request, res: Response): Promise<void> => {
-    return;
-}
-
 export const hash = async (req: Request, res: Response) => {
     const hashParam = req.params.hash;
     const hash = Array.isArray(hashParam) ? hashParam[0] : hashParam;

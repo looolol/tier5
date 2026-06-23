@@ -1,5 +1,6 @@
 import { bungieClient } from "./client.js";
-import { BungieUserProfile } from "../types/tier5-models.js";
+import { BungieUserProfile, CharacterSlots, CLASS_TYPE_MAP, DestinyCharacter, HydratedItem, InventorySummaryResponse } from "../types/tier5-models.js";
+import { hydrateItem } from "../manifest/manifest.js";
 
 export async function getBungieCurrentMembership(authHeader: string, apiKey: string): Promise<BungieUserProfile> {
     try {
@@ -53,4 +54,97 @@ export async function getProfileInventory(
         console.error('[BUNGIE API] Failed fetching profile inventory:', error.message);
         throw new Error('Failed to retrieve inventory data from Bungie.');
     }
+}
+
+
+export async function getUserInventorySummary(
+    apiKey: string,
+    accessToken: string,
+    membershipType: number,
+    membershipId: string
+): Promise<InventorySummaryResponse> {
+    try {
+        const rawProfile = await getProfileInventory(apiKey, accessToken, membershipType, membershipId);
+
+        const rawCharactersData = rawProfile.characters.data;
+        const rawCharactersEquip = rawProfile.characterEquipment.data;
+        const rawCharactersInventories = rawProfile.characterInventories.data;
+        const rawVaultInventory = rawProfile.profileInventory.data.items;
+
+        const mappedCharacters = mapCharacters(
+            rawCharactersData,
+            rawCharactersEquip,
+            rawCharactersInventories
+        );
+
+        const mappedVault = mapVault(rawVaultInventory);
+
+        return {
+            characters: mappedCharacters,
+            vault: mappedVault
+        }
+    } catch (error: any) {
+        console.log('Inventory Aggregation Error:', error.message);
+        throw new Error('Failed coordinating inventory matrix sync.');
+    }
+}
+
+function mapCharacters(
+    rawCharactersData: any,
+    rawCharactersEquip: any,
+    rawCharcatersInventories: any
+): DestinyCharacter[] {
+    return Object.keys(rawCharactersData).map((charId) => {
+        const charInfo = rawCharactersData[charId];
+        const currentCharacter = formatCharacter(charId, charInfo);
+
+        const equippedItems = rawCharactersEquip[charId]?.items || [];
+        populateCharacterSlots(currentCharacter, equippedItems, true);
+
+        const inventoryItems = rawCharcatersInventories[charId]?.items || [];
+        populateCharacterSlots(currentCharacter, inventoryItems, false);
+
+        return currentCharacter;
+    });
+}
+
+function formatCharacter(charId: string, rawCharInfo: any): DestinyCharacter
+{
+    return {
+        characterId: charId,
+        class: CLASS_TYPE_MAP[rawCharInfo.classType] || 'Unknown',
+        light: rawCharInfo.light,
+        emblem: `https://www.bungie.net${rawCharInfo.emblemPath}`,
+        slots: {
+            kinetic: [], energy: [], power: [],
+            helmet: [], gauntlets: [], chest: [], legs: [], classItem: []
+        }
+    };
+}
+
+function populateCharacterSlots(
+    charcter: DestinyCharacter, 
+    rawItems: any[],
+    isEquipped: boolean
+): void {
+    rawItems.forEach((item) => {
+        const hydrated = hydrateItem(item);
+        if (hydrated) { 
+            const slotKey = hydrated.slot as keyof CharacterSlots;
+            if (charcter.slots[slotKey]) {
+                charcter.slots[slotKey].push({ ...hydrated, equipped: isEquipped });
+            }
+        }
+    });
+}
+
+function mapVault(rawVaultInventory: any): HydratedItem[] {
+    const formattedVault: any[] = [];
+    rawVaultInventory.forEach((item: any) => {
+        const hydrated = hydrateItem(item);
+        if (hydrated) {
+            formattedVault.push(hydrated);
+        }
+    });
+    return formattedVault;
 }
