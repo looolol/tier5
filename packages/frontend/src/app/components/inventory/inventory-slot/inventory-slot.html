@@ -1,8 +1,10 @@
 <div class="slot-row-wrapper" [class.is-vault]="isVault">
     @if (!isVault) {
         <div class="equipped-box" 
+            id="equipped-{{slotName}}"
             cdkDropList 
-            [cdkDropListData]="[equippedItem()]"
+            [cdkDropListConnectedTo]="['inv-' + slotName]"
+            [cdkDropListData]="[{ items: equippedItem(), context: slotName }]"
             [cdkDropListSortingDisabled]="true"
             (cdkDropListDropped)="onDrop($event)">
             
@@ -15,8 +17,10 @@
     }
 
     <div class="inventory-grid"
+        id="inv-{{slotName}}"
         cdkDropList
-        [cdkDropListData]="inventoryPool()"
+        [cdkDropListConnectedTo]="!isVault ? ['equipped-' + slotName] : []"
+        [cdkDropListData]="{ items: inventoryPool(), context: slotName }"
         [cdkDropListSortingDisabled]="true"
         [cdkDropListEnterPredicate]="enterPredicate"
         (cdkDropListDropped)="onDrop($event)">

@@ -16,6 +16,7 @@ import { CdkDrag, CdkDragDrop, CdkDropList, DragDropModule } from '@angular/cdk/
 })
 export class InventorySlot {
   @Input({ required: true }) items: HydratedItem[] = [];
+  @Input() slotName: string = 'unknown';
   @Input() isVault = false;
   @Output() itemDropped = new EventEmitter<CdkDragDrop<any>>();
 
@@ -23,7 +24,8 @@ export class InventorySlot {
   protected readonly inventoryPool = computed(() => this.isVault ? this.items : this.items.filter(i => !i.equipped));
 
   onDrop(event: CdkDragDrop<any>) {
-    console.log('cdkDragDrop', event);
+    console.log('--- Drag and Drop Event ---');
+    console.log(`Dropped from: ${event.previousContainer.id} to ${event.container.id}`);    console.log('Event details:', event);
     this.itemDropped.emit(event);
   }
 

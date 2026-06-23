@@ -21,11 +21,11 @@
       @for (slotKey of slotsOrder; track slotKey) {
         @for (char of store.characters(); track char.characterId) {
           <div class="grid-cell-wrapper" [class.collapsed]="isCollapsed(char.characterId)">
-            <app-inventory-slot [items]="char.slots[slotKey] ?? []" />
+            <app-inventory-slot [items]="char.slots[slotKey] ?? []" [slotName]="char.class ?? 'bleh'"/>
           </div>
         }
         <div class="grid-cell-wrapper vault-cell">
-          <app-inventory-slot [items]="getVaultSlotItems(slotKey, store.vault())" [isVault]="true" />
+          <app-inventory-slot [items]="getVaultSlotItems(slotKey, store.vault())" [slotName]="'Vault'" [isVault]="true" />
         </div>
       }
     </div>
