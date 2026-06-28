@@ -1,0 +1,53 @@
+<div class="slot-row-wrapper" [class.is-vault]="isVault()">
+    @if (!isVault()) {
+        <div class="equipped-box"
+            id="equipped-{{slotName()}}"
+            cdkDropList
+            [cdkDropListConnectedTo]="['inv-' + slotName()]"
+            [cdkDropListData]="[{ items: equippedItem(), context: slotName(), type: 'equipped' }]"
+            [cdkDropListSortingDisabled]="true"
+            (cdkDropListDropped)="onDrop($event)">
+
+          <div class="equipped-sticky-container">
+            @if (equippedItem()) {
+              <div cdkDrag [cdkDragData]="equippedItem()">
+                <app-inventory-item [item]="equippedItem()!" [isEquippedFrame]="true" />
+              </div>
+            } @else {
+                <div class="empty-placeholder-slot" cdkDragDisabled></div>
+            }
+          </div>
+        </div>
+    }
+
+    <div class="inventory-grid"
+        id="inv-{{slotName()}}"
+        cdkDropList
+        [cdkDropListConnectedTo]="!isVault() ? ['equipped-' + slotName()] : []"
+        [cdkDropListData]="{ items: inventoryPool(), context: slotName(), type: 'inventory' }"
+        [cdkDropListSortingDisabled]="true"
+        [cdkDropListEnterPredicate]="enterPredicate"
+        (cdkDropListDropped)="onDrop($event)">
+
+      @if (isVault()) {
+        @for (item of inventoryPool(); track item.instanceId || item.hash) {
+          <div cdkDrag [cdkDragData]="item">
+            <app-inventory-item [item]="item" />
+          </div>
+        }
+      } @else {
+        <div class="character-matrix-3x3">
+          @for (idx of [0,1,2,3,4,5,6,7,8]; track idx) {
+            @let item = inventoryPool()[idx];
+            <div class="grid-node-slot" [class.has-item]="item">
+              @if (item) {
+                <div cdkDrag [cdkDragData]="item">
+                  <app-inventory-item [item]="item" />
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+</div>

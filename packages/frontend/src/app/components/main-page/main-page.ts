@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { Auth } from 'src/app/services/auth/auth';
+import { Auth } from '../../services/auth/auth';
+
 
 @Component({
   selector: 'app-main-page',

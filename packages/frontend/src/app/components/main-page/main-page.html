@@ -1,37 +1,50 @@
-<div style="max-width: 1400px; margin: 0 auto; padding: 2rem; font-family: system-ui, sans-serif; color: #f5f5f5;">
+<!-- Outer Shell: Fluid width, stretches out to the screen edges -->
+<div class="app-viewport-shell">
       
-    <div style="max-width: 500px; margin: 0 auto 3rem auto; padding: 2rem; background: #ffffff; border: 1px solid #e4e4e7; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); text-align: center; color: #18181b;">
-      <h2 style="margin-top: 0; color: #18181b; font-size: 1.5rem; margin-bottom: 0.5rem;">Vanguard Terminal</h2>
-      <p style="color: #71717a; font-size: 0.9rem; margin-bottom: 2rem;">Bungie Auth Verification Environment</p>
+  <!-- 🌐 LOGGED OUT LANDING VIEW -->
+  @if (!userProfile() && !isProfileLoading()) {
+    <div class="login-card-container">
+      <div class="login-card">
+        <h2>Vanguard Terminal</h2>
+        <p class="subtitle">Bungie Auth Verification Environment</p>
 
-      @if (isProfileLoading()) {
-        <div style="padding: 2rem 0;">
-          <div class="spinner"></div>
-          <p style="color: #71717a; font-style: italic; font-size: 0.95rem; margin: 0;">Verifying profiles...</p>
-        </div>
-      }
-      @else if (userProfile(); as user) {
-        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #0f172a; color: #ffffff; border-radius: 8px; text-align: left; margin-bottom: 1.5rem;">
-          <img [src]="user.profilePicture" alt="Guardian Emblem" style="width: 52px; height: 52px; border-radius: 50%; border: 2px solid #38bdf8; background: #1e293b;" />
-          <div style="flex-grow: 1;">
-            <h4 style="margin: 0; font-size: 1.1rem; color: #f8fafc; font-weight: 600;">{{ user.displayName }}</h4>
-            <p style="margin: 2px 0 0 0; font-size: 0.85rem; color: #94a3b8;">{{ user.username }}</p>
-          </div>
-          <button (click)="logout()" class="logout-btn">Disconnect</button>
-        </div>
-        <p style="color: #16a34a; font-size: 0.85rem; font-weight: 500; margin: 0;">✓ Token Handshake verified and active.</p>
-      }
-      @else {
-        <p style="color: #52525b; font-size: 0.95rem; line-height: 1.5; margin-bottom: 2rem;">No authentication tokens detected in local memory cache.</p>
+        <p class="status-text">No authentication tokens detected in local memory cache.</p>
         <a href="https://tier5.local/api/auth/login" class="login-btn">🛡️ Authenticate via Bungie.net</a>
-      }
-    </div>
-
-    @if (isProfileLoading()) {
-      <div style="text-align: center; color: #666; padding: 3rem; font-style: italic;">
-        🔒 Waiting for profile authorization sequence to sync parameters...
       </div>
-    } @else if (userProfile()) {
+    </div>
+  }
+
+  <!-- ⏳ LOADING STATE WALL -->
+  @if (isProfileLoading()) {
+    <div class="loading-state-container">
+      <div class="spinner"></div>
+      <p>🔒 Waiting for profile authorization sequence to sync parameters...</p>
+    </div>
+  } 
+  
+  <!-- 🛡️ LOGGED IN DASHBOARD LAYER -->
+  @else if (userProfile(); as user) {
+    <!-- Clean, full-bleed navbar header at the top of the screen -->
+    <header class="app-dashboard-header">
+      <div class="brand-group">
+        <h2 class="terminal-logo">Vanguard Terminal</h2>
+        <span class="status-badge">✓ Matrix Handshake Active</span>
+      </div>
+
+      <div class="user-profile-badge">
+        <img [src]="user.profilePicture" alt="Guardian Emblem" />
+        <div class="user-meta">
+          <span class="display-name">{{ user.displayName }}</span>
+          <span class="system-username">{{ user.username }}</span>
+        </div>
+        <button (click)="logout()" class="logout-btn">Disconnect</button>
+      </div>
+    </header>
+
+    <!-- Fullscreen space for your inventory dashboard layout components -->
+    <main class="dashboard-content-frame">
       <router-outlet></router-outlet>
-    }
-  </div>
+    </main>
+  }
+
+</div>

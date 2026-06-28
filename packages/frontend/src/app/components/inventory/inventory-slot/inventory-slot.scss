@@ -1,0 +1,98 @@
+:host {
+  height: 100%;
+}
+
+.slot-row-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--gap);
+  background: #0f0f11;
+  padding: var(--gap);
+  border-radius: 6px;
+  border: 1px solid #1c1c1f;
+  width: fit-content;
+  align-items: stretch;
+  height: 100%;
+  box-sizing: border-box;
+
+  &.is-vault {
+    width: calc(100% - 2px);
+  }
+}
+
+.equipped-box {
+  display: flex;
+  flex-shrink: 0;
+  padding-right: var(--gap);
+  border-right: 1px solid #1f1f23;
+  width: var(--equipped-size);
+
+  .equipped-sticky-container {
+    position: sticky;
+    top: var(--gap);
+    height: var(--equipped-size);
+  }
+}
+
+.empty-placeholder-slot, .grid-node-slot {
+  width: var(--item-size);
+  height: var(--item-size);
+  border: 1px dashed #2d2d30;
+  border-radius: 6px;
+  background: #131315;
+  box-sizing: border-box;
+}
+
+.empty-placeholder-slot {
+  width: var(--equipped-size);
+  height: var(--equipped-size);
+}
+
+.grid-node-slot.has-item {
+  border: none;
+  background: transparent;
+}
+
+.inventory-grid {
+  width: var(--inventory-3x3-width);
+  min-width: var(--inventory-3x3-width);
+  flex-shrink: 0;
+  height: 100%;
+  min-height: var(--inventory-3x3-width);
+
+  .character-matrix-3x3 {
+    position: sticky;
+    top: 0;
+    display: grid;
+    grid-template-columns: repeat(3, var(--item-size));
+    grid-template-rows: repeat(3, var(--item-size));
+    gap: var(--gap);
+  }
+}
+
+.is-vault .inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  grid-template-rows: unset;
+
+  width: 100%;
+
+  max-width: unset;
+  min-width: unset;
+  height: auto;
+}
+
+.equipped-box.cdk-drop-list-receiving,
+.inventory-grid.cdk-drop-list-receiving {
+  box-shadow: 0 0 10px rgba(161, 161, 170, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #52525b;
+}
+
+.equipped-box.cdk-drop-list-dragging,
+.inventory-grid.cdk-drop-list-dragging {
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.5);
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid #eab308;
+}

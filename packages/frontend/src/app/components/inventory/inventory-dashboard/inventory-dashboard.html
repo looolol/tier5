@@ -1,1 +1,50 @@
-<p>inventory-dashboard works!</p>
+@if (store.isLoading()) {
+  <div class="loading-gate">
+    <h3>🛡️ Recomposing Matrix Grid Configurations...</h3>
+  </div>
+}
+
+<button (click)="toggleCollapse()">Collapse Others</button>
+
+@if (store.data()) {
+  <div class="dashboard-scroller">
+    <div class="matrix-grid"
+         [class.collapsed-layout]="isSidekicksCollapsed"
+         cdkDropListGroup>
+
+      @for (char of store.characters(); track char.characterId; let i = $index) {
+        @if (shouldShow(i)) {
+          <div class="column-header-card">
+            <div class="header-banner" (click)="toggleCollapse()">
+              <img [src]="char.emblem" class="emblem-thumb" />
+              <div class="meta-info">
+                <span>{{ char.class }}</span>
+                <span>{{ char.light }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      }
+      <div class="column-header-card vault-header">
+        <div class="header-banner">
+          <div class="meta-info">
+            <span>🏦 Vault</span>
+          </div>
+        </div>
+      </div>
+
+      @for (slotKey of slotsOrder; track slotKey) {
+        @for (char of store.characters(); track char.characterId; let i = $index) {
+          @if (shouldShow(i)) {
+            <div class="grid-cell-wrapper">
+              <app-inventory-slot [items]="char.slots[slotKey] ?? []" [slotName]="char.class"/>
+            </div>
+          }
+        }
+        <div class="grid-cell-wrapper vault-cell">
+          <app-inventory-slot [items]="getVaultSlotItems(slotKey, store.vault())" [slotName]="'Vault'" [isVault]="true" />
+        </div>
+      }
+    </div>
+  </div>
+}

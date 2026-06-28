@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Auth } from 'src/app/services/auth/auth';
+import { Auth } from '../../services/auth/auth';
 
 @Component({
   selector: 'app-auth-callback',
