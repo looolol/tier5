@@ -23,17 +23,15 @@ export class InventoryDashboard {
     'helmet', 'gauntlets', 'chest', 'legs', 'classItem'
   ] as const;
 
-  private collapseMap = signal<Record<string, boolean>>({});
+  isSidekicksCollapsed = false;
 
-  protected isCollapsed(characterId: string): boolean {
-    return !!this.collapseMap()[characterId];
+  toggleCollapse() {
+    this.isSidekicksCollapsed = !this.isSidekicksCollapsed;
   }
 
-  protected toggleCollapse(characterId: string): void {
-    this.collapseMap.update(map => ({
-      ...map,
-      [characterId]: !map[characterId]
-    }));
+  shouldShow(i: number): boolean {
+    if (i == 0) return true;
+    return !this.isSidekicksCollapsed;
   }
 
   protected getVaultSlotItems(slotKey: string, vaultItems: HydratedItem[]): HydratedItem[] {
