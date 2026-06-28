@@ -25,7 +25,13 @@
           </div>
         }
       }
-      <div class="column-header-card vault-header">🏦 Vault</div>
+      <div class="column-header-card vault-header">
+        <div class="header-banner">
+          <div class="meta-info">
+            <span>🏦 Vault</span>
+          </div>
+        </div>
+      </div>
 
       @for (slotKey of slotsOrder; track slotKey) {
         @for (char of store.characters(); track char.characterId; let i = $index) {

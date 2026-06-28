@@ -1,8 +1,8 @@
-import { Component, computed, EventEmitter, Input, Output } from '@angular/core';
+import { Component, computed, EventEmitter, input, Output } from '@angular/core';
 import { HydratedItem } from '@tier5/bungie-api';
 import { InventoryItem } from '../inventory-item/inventory-item';
 import { CommonModule } from '@angular/common';
-import { CdkDrag, CdkDragDrop, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-inventory-slot',
@@ -15,13 +15,18 @@ import { CdkDrag, CdkDragDrop, CdkDropList, DragDropModule } from '@angular/cdk/
   styleUrl: './inventory-slot.scss',
 })
 export class InventorySlot {
-  @Input({ required: true }) items: HydratedItem[] = [];
-  @Input() slotName: string = 'unknown';
-  @Input() isVault = false;
+  items = input.required<HydratedItem[]>();
+  slotName = input<string>('unknown');
+  isVault = input<boolean>(false);
+
   @Output() itemDropped = new EventEmitter<CdkDragDrop<any>>();
 
-  protected readonly equippedItem = computed(() => this.items.find(i => i.equipped));
-  protected readonly inventoryPool = computed(() => this.isVault ? this.items : this.items.filter(i => !i.equipped));
+  protected readonly equippedItem = computed(() => {
+    return this.items().find(i => i.equipped);
+  });
+  protected readonly inventoryPool = computed(() => {
+    return this.isVault() ? this.items() : this.items().filter(i => !i.equipped);
+  });
 
   onDrop(event: CdkDragDrop<any>) {
     console.log('--- Drag and Drop Event ---');
