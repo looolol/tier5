@@ -56,6 +56,7 @@ export const MANIFEST_COMPONENTS = [
 
 export type ComponentName = typeof MANIFEST_COMPONENTS[number];
 
+export type BucketType = 'weapon' | 'armor' | 'other';
   
 export interface HydratedItem {
     instanceId?: string;
@@ -66,6 +67,10 @@ export interface HydratedItem {
     itemType: string;
     slot: string;
     equipped?: boolean;
+    bucketType: BucketType;
+    element: DAMAGE_TYPE;
+    frame: string;
+    weaponType: string;
 }
 
 export interface CharacterSlots {
@@ -111,4 +116,14 @@ export const BUCKET_MAP: Record<number, string> = {
     14239492: 'chest',
     20886954: 'legs',
     1585787867: 'classItem'
-  };
+};
+
+export type DAMAGE_TYPE = 'Kinetic' | 'Arc' | 'Solar' | 'Void' | 'Stasis' | 'Strand';
+export const DAMAGE_TYPE_MAP: Record<number, DAMAGE_TYPE> = {
+    1: 'Kinetic',
+    2: 'Arc',
+    3: 'Solar',
+    4: 'Void',
+    6: 'Stasis',
+    7: 'Strand'
+};

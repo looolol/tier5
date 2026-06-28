@@ -4,6 +4,7 @@ import { MainPage } from './components/main-page/main-page';
 import { inject } from '@angular/core';
 import { Auth } from './services/auth/auth';
 import { InventoryDashboard } from './components/inventory/inventory-dashboard/inventory-dashboard';
+import { Matrix } from './components/matrix/matrix';
 
 
 const redirectIfAuthed = () => {
@@ -44,6 +45,7 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'inventory', pathMatch: 'full' },
             { path: 'inventory', component: InventoryDashboard },
+            { path: 'matrix', component: Matrix }
         ]
     },
     {

@@ -1,4 +1,4 @@
-import { BUCKET_MAP, ComponentName, DestinyManifestMetadata, HydratedItem } from "../types/tier5-models.js";
+import { BUCKET_MAP, DAMAGE_TYPE_MAP, ComponentName, DestinyManifestMetadata, HydratedItem } from "../types/tier5-models.js";
 import { bungieClient } from "../live/client.js";
 
 
@@ -75,6 +75,32 @@ export function hydrateItem(item: any): HydratedItem | null {
         return null; // Skip non-tracked items like materials or bounties for now
     }
 
+    let bucketType: 'weapon' | 'armor' | 'other' = 'other';
+    if (manifestDetails.itemType === 3) bucketType = 'weapon';
+    else if (manifestDetails.itemType === 2) bucketType = 'armor';
+
+    const rawDamageType = manifestDetails.defaultDamageType || manifestDetails.damageTypes?.[0] || 1;
+    const element = DAMAGE_TYPE_MAP[rawDamageType] || 'Kinetic';
+
+    let frame = 'General Frame';
+    if (manifestDetails.sockets?.socketEntries) {
+        for (const entry of manifestDetails.sockets.socketEntries) {
+            if (entry.singleInitialItemHash) {
+                const plugDef = getItemByHash(entry.singleInitialItemHash);
+                const plugName = plugDef?.displayProperties?.name;
+
+                if (plugName && plugName.includes('Frame')) {
+                    frame = plugName;
+                    break;
+                }
+            }
+        }
+
+        if (frame === 'General Frame' && manifestDetails.itemTypeDisplayName) {
+            frame = manifestDetails.itemTypeDisplayName
+        }
+    }
+
     return {
         instanceId: item.itemInstanceId,
         hash: item.itemHash,
@@ -82,6 +108,10 @@ export function hydrateItem(item: any): HydratedItem | null {
         icon: `https://www.bungie.net${manifestDetails.displayProperties?.icon}`,
         tier: manifestDetails.inventory?.tierTypeName,
         itemType: manifestDetails.itemTypeDisplayName,
-        slot: slotKey
+        slot: slotKey,
+        bucketType,
+        element,
+        frame,
+        weaponType: manifestDetails.itemTypeDisplayName
     }
 }

@@ -1,0 +1,77 @@
+<div class="atlas-page-container">
+  <header class="atlas-header">
+    <div class="header-content">
+      <h1>🗺️ Arsenal Typology Atlas</h1>
+      <p>Account-wide element coverage mapped out by archetype frames.</p>
+    </div>
+  </header>
+
+  <div class="atlas-scroll-viewport">
+    @for (section of atlasData(); track section.typeName) {
+      <div class="weapon-type-card">
+        <div class="category-title-banner">
+          <h2>{{ section.typeName }}s</h2>
+        </div>
+
+        <div class="table-responsive-wrapper">
+          <table class="matrix-table">
+            <thead>
+            <tr>
+              <th class="axis-corner-label">Element</th>
+              @for (frameName of section.allDiscoveredFrames; track frameName) {
+                <th>{{ frameName }}</th>
+              }
+            </tr>
+            </thead>
+            <tbody>
+              @for (row of section.elements; track row.elementName) {
+                <tr [className]="'element-row-' + row.elementName.toLowerCase()">
+                  <td class="element-axis-cell">
+                    <div class="element-badge">
+                      <span class="element-indicator-dot"></span>
+                      {{ row.elementName }}
+                    </div>
+                  </td>
+
+                  @for (frameName of section.allDiscoveredFrames; track frameName) {
+                    @let rolls = row.framesMap.get(frameName) || [];
+
+                    <td class="matrix-cell" [class.is-empty]="rolls.length === 0">
+                      @if (rolls.length > 0) {
+                        <div class="cell-inventory-stack">
+
+                          @for (item of rolls; track item.instanceId || item.hash) {
+                            <div class="atlas-weapon-node" [attr.data-tier]="item.tier?.toLowerCase()">
+                              <div class="node-meta">
+                                <div class="name-block">
+                                  <img [src]="item.icon" [alt]="item.name" class="mini-item-icon" />
+                                  <span class="weapon-name">{{ item.name }}</span>
+                                </div>
+                                <span class="light-pill">✦300</span>
+                              </div>
+
+                              <div class="perk-combo-strip">
+                                <span class="perk-tag">Inventory Roll</span>
+                              </div>
+                            </div>
+                          }
+
+                        </div>
+                      } @else {
+                        <div class="empty-cell-fallback">—</div>
+                      }
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @empty {
+      <div class="loading-state">
+        <p>Syncing Bungie Profile inventory data blocks...</p>
+      </div>
+    }
+  </div>
+</div>
