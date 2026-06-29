@@ -59,7 +59,15 @@ export class Matrix {
       const elementMap = archetypeMap.get(frame)!;
 
       if (!elementMap.has(element)) elementMap.set(element, []);
-      elementMap.get(element)!.push(item);
+
+      const currentCellRolls = elementMap.get(element)!;
+      currentCellRolls.push(item);
+
+      currentCellRolls.sort((a, b) => {
+        const nameA = a.name || '';
+        const nameB  = b.name || '';
+        return nameA.localeCompare(nameB);
+      });
     });
 
     const finalSections: WeaponTypeSection[] = [];
