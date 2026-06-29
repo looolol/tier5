@@ -3,21 +3,18 @@ import { HydratedItem } from '@tier5/bungie-api';
 import { CommonModule } from '@angular/common';
 import { InventoryState } from '../../services/inventory-state/inventory-state';
 
-interface AtlasCell {
-  frame: string;
-  weapons: HydratedItem[];
-}
 
-interface ElementRow {
-  elementName: string;
-  framesMap: Map<string, HydratedItem[]>;
+interface ArchetypeRow {
+  frameName: string;
+  elementsMap: Map<string, HydratedItem[]>;
 }
 
 interface WeaponTypeSection {
   typeName: string;
-  allDiscoveredFrames: string[];
-  elements: ElementRow[];
+  trackedElements: string[];
+  archetypeRows: ArchetypeRow[];
 }
+
 
 @Component({
   selector: 'app-matrix',
@@ -30,7 +27,7 @@ interface WeaponTypeSection {
 export class Matrix {
   protected readonly store = inject(InventoryState);
 
-  protected readonly trackedElements = [
+  protected readonly columnsElements = [
     'Kinetic', 'Stasis', 'Strand', 'Arc', 'Solar', 'Void'
   ] as const;
 
@@ -56,32 +53,32 @@ export class Matrix {
       const frame = item.frame || 'General / Exotic';
 
       if (!typeMap.has(type)) typeMap.set(type, new Map());
-      const elementMap = typeMap.get(type)!;
+      const archetypeMap = typeMap.get(type)!;
 
-      if (!elementMap.has(element)) elementMap.set(element, new Map());
-      const frameMap = elementMap.get(element)!;
+      if (!archetypeMap.has(frame)) archetypeMap.set(frame, new Map());
+      const elementMap = archetypeMap.get(frame)!;
 
-      if (!frameMap.has(frame)) frameMap.set(frame, []);
-      frameMap.get(frame)!.push(item);
+      if (!elementMap.has(element)) elementMap.set(element, []);
+      elementMap.get(element)!.push(item);
     });
 
     const finalSections: WeaponTypeSection[] = [];
-    typeMap.forEach((elementMap, typeName) => {
-      const frameSet = new Set<string>();
-      elementMap.forEach(frameMap => {
-        frameMap.forEach((_, frameName) => frameSet.add(frameName));
-      });
-      const allDiscoveredFrames = Array.from(frameSet).sort();
+    typeMap.forEach((archetypeMap, typeName) => {
+      const archetypeRows: ArchetypeRow[] = [];
 
-      const elements: ElementRow[] = this.trackedElements.map(elementName => {
-        const framesMap = elementMap.get(elementName) || new Map<string, HydratedItem[]>();
-        return { elementName, framesMap };
+      archetypeMap.forEach((elementMap, frameName) => {
+        archetypeRows.push({
+          frameName,
+          elementsMap: elementMap
+        });
       });
+
+      archetypeRows.sort((a, b) => a.frameName.localeCompare(b.frameName));
 
       finalSections.push({
         typeName,
-        allDiscoveredFrames,
-        elements
+        trackedElements: [...this.columnsElements],
+        archetypeRows
       });
     });
 

@@ -2,7 +2,7 @@
   <header class="atlas-header">
     <div class="header-content">
       <h1>🗺️ Arsenal Typology Atlas</h1>
-      <p>Account-wide element coverage mapped out by archetype frames.</p>
+      <p>Account-wide archetype frames sorted across core elemental lanes.</p>
     </div>
   </header>
 
@@ -17,34 +17,36 @@
           <table class="matrix-table">
             <thead>
             <tr>
-              <th class="axis-corner-label">Element</th>
-              @for (frameName of section.allDiscoveredFrames; track frameName) {
-                <th>{{ frameName }}</th>
+              <th class="axis-corner-label">Archetype</th>
+              @for (elementName of section.trackedElements; track elementName) {
+                <th [className]="'element-th-' + elementName.toLowerCase()">
+                  <div class="header-element-wrap">
+                    <span class="element-indicator-dot"></span>
+                    {{ elementName }}
+                  </div>
+                </th>
               }
             </tr>
             </thead>
             <tbody>
-              @for (row of section.elements; track row.elementName) {
-                <tr [className]="'element-row-' + row.elementName.toLowerCase()">
-                  <td class="element-axis-cell">
-                    <div class="element-badge">
-                      <span class="element-indicator-dot"></span>
-                      {{ row.elementName }}
-                    </div>
+              @for (row of section.archetypeRows; track row.frameName) {
+                <tr class="archetype-matrix-row">
+                  <td class="archetype-axis-cell">
+                    <span class="frame-title-text">{{ row.frameName }}</span>
                   </td>
 
-                  @for (frameName of section.allDiscoveredFrames; track frameName) {
-                    @let rolls = row.framesMap.get(frameName) || [];
+                  @for (elementName of section.trackedElements; track elementName) {
+                    @let rolls = row.elementsMap.get(elementName) || [];
 
                     <td class="matrix-cell" [class.is-empty]="rolls.length === 0">
                       @if (rolls.length > 0) {
                         <div class="cell-inventory-stack">
-
                           @for (item of rolls; track item.instanceId || item.hash) {
                             <div class="atlas-weapon-node" [attr.data-tier]="item.tier?.toLowerCase()">
                               <div class="node-meta">
                                 <div class="name-block">
                                   <img [src]="item.icon" [alt]="item.name" class="mini-item-icon" />
+                                  <span class="weapon-element-node-dot" [className]="'weapon-element-node-dot flavor-' + item.element?.toLowerCase()"></span>
                                   <span class="weapon-name">{{ item.name }}</span>
                                 </div>
                                 <span class="light-pill">✦300</span>
@@ -55,7 +57,6 @@
                               </div>
                             </div>
                           }
-
                         </div>
                       } @else {
                         <div class="empty-cell-fallback">—</div>

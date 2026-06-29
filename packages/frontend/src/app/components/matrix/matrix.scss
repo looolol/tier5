@@ -30,7 +30,7 @@
   border: 1px solid #1c1c1f;
   border-radius: 8px;
   margin-bottom: 3rem;
-  overflow: hidden;
+  overflow: visible; /* Important to keep full-height sticky headers working */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   max-width: 100%;
 }
@@ -51,7 +51,7 @@
 
 .table-responsive-wrapper {
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: visible; /* Keeps full viewport-relative scroll integrity */
   width: 100%;
   position: relative;
 
@@ -72,7 +72,7 @@
 
 .matrix-table {
   width: 100%;
-  border-collapse: separate; /* Required over 'collapse' to prevent frozen cell outlines from clipping */
+  border-collapse: separate;
   border-spacing: 0;
   text-align: left;
   table-layout: fixed;
@@ -86,41 +86,73 @@
     width: 280px;
   }
 
-  /* 🧊 DUAL AXIS FREEZE: VIEWPORT CONTEXT */
+  /* 🧊 VERTICAL VIEWPORT HEADER SCROLL TRACK LOCK */
   thead th {
     position: sticky;
-    top: 0; /* Pins to top of window as you scroll deep down the page */
+    top: 0;
     z-index: 3;
     background: #151518;
     box-shadow: inset 0 -1px 0 #1c1c1f, inset 0 1px 0 #1c1c1f;
   }
 
-  /* 🧊 DUAL INTERSECTION CORNER */
+  /* 🧊 DUAL INTERSECTION CORNER (Pinned row & col combined) */
   .axis-corner-label {
     position: sticky;
     left: 0;
-    top: 0; /* Freezes horizontally AND vertically with your viewport scroll track */
+    top: 0;
     z-index: 4;
     background: #151518 !important;
-    width: 140px;
-    min-width: 140px;
+    width: 180px; // Slightly wider to hold frames comfortability
+    min-width: 180px;
+    color: #a1a1aa;
     box-shadow: inset -1px 0 0 #1c1c1f, inset 0 -1px 0 #1c1c1f, inset 0 1px 0 #1c1c1f;
   }
 
-  /* 🧊 HORIZONTAL ONLY AXIS LOCK */
-  .element-axis-cell {
-    width: 140px;
-    min-width: 140px;
+  /* 🧊 HORIZONTAL ONLY BOUNDARY ROW LABELS LINE LOCK */
+  .archetype-axis-cell {
+    width: 180px;
+    min-width: 180px;
     position: sticky;
-    left: 0; /* Remains frozen horizontally while letting rows pass natively over vertical loops */
+    left: 0;
     z-index: 2;
     font-weight: 600;
     vertical-align: middle;
+    background: #141417; // Clean solid block hides passing horizontal item text cards
     box-shadow: inset -1px 0 0 #1c1c1f;
+
+    .frame-title-text {
+      color: #e4e4e7;
+      font-size: 0.9rem;
+    }
   }
 }
 
-/* Cell State Intersections */
+/* Header Elements Column Badging Layouts */
+.header-element-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.element-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Individual Element Header Accents */
+.element-th-kinetic { .element-indicator-dot { background: #f4f4f5; } .header-element-wrap { color: #f4f4f5; } }
+.element-th-stasis   { .element-indicator-dot { background: #60a5fa; } .header-element-wrap { color: #60a5fa; } }
+.element-th-strand   { .element-indicator-dot { background: #4ade80; } .header-element-wrap { color: #4ade80; } }
+.element-th-arc      { .element-indicator-dot { background: #38bdf8; } .header-element-wrap { color: #38bdf8; } }
+.element-th-solar    { .element-indicator-dot { background: #f97316; } .header-element-wrap { color: #f97316; } }
+.element-th-void     { .element-indicator-dot { background: #c084fc; } .header-element-wrap { color: #c084fc; } }
+
+/* Matrix Cell Properties */
 .matrix-cell {
   background: rgba(18, 18, 20, 0.3);
 
@@ -144,7 +176,7 @@
   gap: 0.75rem;
 }
 
-/* Individual Gun Asset Nodes */
+/* Weapon Node Cards */
 .atlas-weapon-node {
   background: #19191d;
   border: 1px solid #27272c;
@@ -173,6 +205,31 @@
       gap: 0.6rem;
     }
 
+    /* Put this right inside your .atlas-weapon-node block, near .mini-item-icon */
+    .weapon-element-node-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: inline-block;
+
+      // Exact Bungie API UI Element Color Hex Codes
+      &.flavor-kinetic { background: #f4f4f5; }
+      &.flavor-stasis   { background: #60a5fa; box-shadow: 0 0 4px rgba(96, 165, 250, 0.4); }
+      &.flavor-strand   { background: #4ade80; box-shadow: 0 0 4px rgba(74, 222, 128, 0.4); }
+      &.flavor-arc      { background: #38bdf8; box-shadow: 0 0 4px rgba(56, 189, 248, 0.4); }
+      &.flavor-solar    { background: #f97316; box-shadow: 0 0 4px rgba(249, 115, 22, 0.4); }
+      &.flavor-void     { background: #c084fc; box-shadow: 0 0 4px rgba(192, 132, 252, 0.4); }
+    }
+
+    // Adjust the name block slightly to handle the extra dot cleanly
+    .name-block {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem; /* Keeps spacing uniform between icon, dot, and name string */
+      overflow: hidden;
+    }
+
     .mini-item-icon {
       width: 24px;
       height: 24px;
@@ -197,7 +254,6 @@
     }
   }
 
-  /* Rarity tier offsets styled inside the item box layout container boundary limits */
   &[data-tier="exotic"] {
     border-left: 4px solid #ceae33;
     padding-left: 0.55rem;
@@ -220,60 +276,6 @@
     padding: 2px 6px;
     border-radius: 4px;
   }
-}
-
-/* Element Badging Layout Properties */
-.element-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.element-indicator-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-/* Sticky row background colors mapped out to disguise elements sliding underneath */
-.element-row-kinetic {
-  .element-indicator-dot { background: #f4f4f5; }
-  .element-badge { color: #f4f4f5; }
-  .element-axis-cell { background: #131316; }
-}
-.element-row-stasis {
-  background: rgba(96, 165, 250, 0.01);
-  .element-indicator-dot { background: #60a5fa; }
-  .element-badge { color: #60a5fa; }
-  .element-axis-cell { background: #14161b; }
-}
-.element-row-strand {
-  background: rgba(34, 197, 94, 0.01);
-  .element-indicator-dot { background: #4ade80; }
-  .element-badge { color: #4ade80; }
-  .element-axis-cell { background: #131715; }
-}
-.element-row-arc {
-  background: rgba(56, 189, 248, 0.01);
-  .element-indicator-dot { background: #38bdf8; }
-  .element-badge { color: #38bdf8; }
-  .element-axis-cell { background: #13171b; }
-}
-.element-row-solar {
-  background: rgba(249, 115, 22, 0.01);
-  .element-indicator-dot { background: #f97316; }
-  .element-badge { color: #f97316; }
-  .element-axis-cell { background: #191614; }
-}
-.element-row-void {
-  background: rgba(168, 85, 247, 0.01);
-  .element-indicator-dot { background: #c084fc; }
-  .element-badge { color: #c084fc; }
-  .element-axis-cell { background: #16141a; }
 }
 
 .loading-state {
